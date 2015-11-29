@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <omp.h>
 
-#include "papi.h"
+//#include "papi.h"
 
 
 #define NUM_EVENTS 4
@@ -14,7 +14,7 @@
 
 
 /* Multiplicador de matrizes*/
-
+/*
 void mmult(int **a, int **b, int **result, int n ) {
 	int i, j, k;
 	
@@ -23,15 +23,17 @@ void mmult(int **a, int **b, int **result, int n ) {
 	 	 for ( k = 0; k < n; k++)
        result[i][j] += a[i][k] * b[k][j];
 }
-
+*/
 
 /*
  * recebebe como parametros (altura e largura da 1ª matriz)
  */
-int main(int argc, char *argv[]) {
+int main() {
 	
 
-printf("Teste");
+	printf("Teste");
+
+
 	int matrizSize = MATRIX_SIZE;
 	int i, j;
 	
@@ -43,15 +45,15 @@ printf("Teste");
 	int **matrizR;/*Matriz resultado*/
 	
 	/*Eventos Papi*/
-	int Events[NUM_EVENTS]= {PAPI_L1_TCM, PAPI_L2_TCM, PAPI_L3_TCM, PAPI_TOT_INS};
+	/*int Events[NUM_EVENTS]= {PAPI_L1_TCM, PAPI_L2_TCM, PAPI_L3_TCM, PAPI_TOT_INS};
 	int EventSet;
 	long long values[NUM_EVENTS];
 	/* Initialize the Library */
-	PAPI_library_init(PAPI_VER_CURRENT);
+	/*PAPI_library_init(PAPI_VER_CURRENT);
 	/* Allocate space for the new eventset and do setup */
-	PAPI_create_eventset(&EventSet);
+	//PAPI_create_eventset(&EventSet);
 	/* Add Flops and total cycles to the eventset */
-	PAPI_add_events(EventSet,Events,NUM_EVENTS);
+	//PAPI_add_events(EventSet,Events,NUM_EVENTS);
 	
 
 	if (( matrizA = malloc( MATRIX_SIZE*sizeof( int* ))) == NULL )
@@ -88,22 +90,22 @@ printf("Teste - Adicionou os random");
 	double start = omp_get_wtime();
 	
 	/*iniciar papi*/
-	PAPI_start(EventSet);
+	//PAPI_start(EventSet);
 	
 	// calcular produto das matrizes
-	mmult(matrizA, matrizB, matrizR, matrizSize);
+	//mmult(matrizA, matrizB, matrizR, matrizSize);
 
 printf("Teste - calculou a matriz");
 	
 	/*Finalizar Papi*/
-	PAPI_stop(EventSet,values);
+	//PAPI_stop(EventSet,values);
 	
 	/*finalizar contador de tempo*/
 	double end = omp_get_wtime();
 	
 	/*imprimir resultados*/
 	
-	printf("PAPI_L1_TCM= %lli\n PAPI_L2_TCM = %lli\n PAPI_L3_TCM = %lli\n PAPI_TOT_INS = %lli\n", values[0],values[1],values[2],values[3]);
+	//printf("PAPI_L1_TCM= %lli\n PAPI_L2_TCM = %lli\n PAPI_L3_TCM = %lli\n PAPI_TOT_INS = %lli\n", values[0],values[1],values[2],values[3]);
 	
 	printf("Cocluido em %f segundos.\n", (end-start));
 	
