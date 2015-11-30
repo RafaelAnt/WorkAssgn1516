@@ -14,10 +14,10 @@
 //L2 cache = 256KB (por core)
 //L3 cache = 6MB (partilhada)
 
-//Size
-//Size
-//Size
-//Size 
+//Size 40 = 18 KB
+//Size 120 = 168 KB
+//Size 500 = 2.861 MB
+//Size 1000 = 11.444 MB
 
 
 /* Multiplicador de matrizes*/
