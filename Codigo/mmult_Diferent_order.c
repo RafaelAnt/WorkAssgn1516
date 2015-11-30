@@ -8,16 +8,16 @@
 
 #define NUM_EVENTS 4
 #define MAX_RAND_NUMBER 100
-#define MATRIX_SIZE 1200
+//#define MATRIX_SIZE 40
 
 //L1 cache = 32KB (por core)
 //L2 cache = 256KB (por core)
 //L3 cache = 6MB (partilhada)
 
-//Size 50 = 19.531 KB
-//Size 165 = 212.695 KB
-//Size 800 = 2.85481 MB
-//Size 1200 = 10.986 MB
+//Size
+//Size
+//Size
+//Size 
 
 
 /* Multiplicador de matrizes*/
@@ -37,11 +37,16 @@ void mmult(int **a, int **b, int **result, int n ) {
  */
 int main(int argc, char *argv[]) {
 
+	if(argc != 2){
+		printf("ARGUMENT_ERROR\n");
+		return -1;
+	}
 
-	int matrizSize = MATRIX_SIZE;
+
+	int matrixSize = atoi(argv[1]);
 	int i, j;
 
-
+	//printf("%d\n",matrixSize);
 
 	/*Inicializar variaveis*/
 	int **matrizA;
@@ -70,19 +75,19 @@ int main(int argc, char *argv[]) {
 	}
 
 
-	if (( matrizA = malloc( MATRIX_SIZE*sizeof( int* ))) == NULL )
+	if (( matrizA = malloc( matrixSize*sizeof( int* ))) == NULL )
 		{ return 0; }
-	if (( matrizB = malloc( MATRIX_SIZE*sizeof( int* ))) == NULL )
+	if (( matrizB = malloc( matrixSize*sizeof( int* ))) == NULL )
 		{ return 0; }
-	if (( matrizR = malloc( MATRIX_SIZE*sizeof( int* ))) == NULL )
+	if (( matrizR = malloc( matrixSize*sizeof( int* ))) == NULL )
 		{ return 0; }
 
-	for ( i = 0; i < MATRIX_SIZE; i++ ){
-	  	if (( matrizA[i] = malloc( MATRIX_SIZE*sizeof(int ) )) == NULL )
+	for ( i = 0; i < matrixSize; i++ ){
+	  	if (( matrizA[i] = malloc( matrixSize*sizeof(int ) )) == NULL )
 		  	{ return 0; }
-		if (( matrizB[i] = malloc( MATRIX_SIZE*sizeof(int) )) == NULL )
+		if (( matrizB[i] = malloc( matrixSize*sizeof(int) )) == NULL )
 		  	{ return 0; }
-		if (( matrizR[i] = malloc( MATRIX_SIZE*sizeof(int) )) == NULL )
+		if (( matrizR[i] = malloc( matrixSize*sizeof(int) )) == NULL )
 		  	{ return 0; }
 	}
 
@@ -91,8 +96,8 @@ int main(int argc, char *argv[]) {
 
 	/*Gerar matrizes com elementos aleatorios*/
 
-  for ( i = 0; i < MATRIX_SIZE; ++i) {
-    for ( j = 0; j < MATRIX_SIZE; ++j) {
+  for ( i = 0; i < matrixSize; ++i) {
+    for ( j = 0; j < matrixSize; ++j) {
       matrizA[i][j] = ((float) rand()) / (((float) RAND_MAX)*MAX_RAND_NUMBER);
       matrizB[i][j] = ((float) rand()) / (((float) RAND_MAX)*MAX_RAND_NUMBER);
     }
@@ -107,7 +112,7 @@ int main(int argc, char *argv[]) {
 	PAPI_start(EventSet);
 
 	// calcular produto das matrizes
-	mmult(matrizA, matrizB, matrizR, matrizSize);
+	mmult(matrizA, matrizB, matrizR, matrixSize);
 
 
 
@@ -118,24 +123,25 @@ int main(int argc, char *argv[]) {
 	double end = omp_get_wtime();
 
 	/*imprimir resultados*/
-	printf("\n\n");
-	printf("Tamanho de cada matriz: ");
-	  double bytes = sizeof(float) * MATRIX_SIZE * MATRIX_SIZE;
-	  if(bytes<=1024)  printf("%.3f bytes...\n", (double) bytes);
-	  if(bytes>1024 && bytes <= 1024*1024)  printf("%.3f Kbytes...\n", (double) bytes/1024);
-	  if(bytes>1024*1024)  printf("%.3f Mbytes...\n", (double) bytes/(1024*1024));
-		bytes = bytes * 2;
-	printf("Tamanho Total: ");
-		if(bytes<=1024)  printf("%.3f bytes...\n", (double) bytes);
-		if(bytes>1024 && bytes <= 1024*1024)  printf("%.3f Kbytes...\n", (double) bytes/1024);
-		if(bytes>1024*1024)  printf("%.3f Mbytes...\n", (double) bytes/(1024*1024));
+	//printf("\n\n");
+	//printf("Tamanho de cada matriz: ");
+	  long long int bytes = sizeof(float) * matrixSize * matrixSize;
+	  //if(bytes<=1024)  printf("%.3f bytes...\n", (double) bytes);
+	  //if(bytes>1024 && bytes <= 1024*1024)  printf("%.3f Kbytes...\n", (double) bytes/1024);
+	  //if(bytes>1024*1024)  printf("%.3f Mbytes...\n", (double) bytes/(1024*1024));
+		//bytes = bytes * 3;
+	//printf("Tamanho Total: ");
+		//if(bytes<=1024)  printf("%.3f bytes...\n", (double) bytes);
+		//if(bytes>1024 && bytes <= 1024*1024)  printf("%.3f Kbytes...\n", (double) bytes/1024);
+		//if(bytes>1024*1024)  printf("%.3f Mbytes...\n", (double) bytes/(1024*1024));
 
 
-	//printf("\nTamanho de cada matriz = %ld Bytes\n\n",sizeof(float)*MATRIX_SIZE*MATRIX_SIZE);
-	printf("\nPAPI_L1_TCM= %lld\n PAPI_L2_TCM = %lld\n PAPI_L3_TCM = %lld\n PAPI_TOT_INS = %lld\n\n", values[0],values[1],values[2],values[3]);
+	//printf("\nTamanho de cada matriz = %ld Bytes\n\n",sizeof(float)*matrixSize*matrixSize);
+	//printf("\nPAPI_L1_TCM= %lld\nPAPI_L2_TCM = %lld\nPAPI_L3_TCM = %lld\nPAPI_TOT_INS = %lld\n\n", values[0],values[1],values[2],values[3]);
 
-	printf("Concluido em %f segundos.\n\n", (end-start));
+	//printf("Concluido em %f segundos.\n\n", (end-start));
 
+	printf("%lld,%lld,%lld,%lld,%lld,%f;",bytes,values[0],values[1],values[2],values[3],(end-start));
 
 	return 1;
 }
