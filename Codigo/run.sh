@@ -1,74 +1,15 @@
-#!/bin/bash
-echo Start test > test.txt
-#Versão original
+#!/bin/sh
 
-echo Versao original >>test.txt
-i=0
-echo loop: $i >>test.txt
-./mmult_Orig >> test.txt
-i=$((i+1))
-echo loop: $i >>test.txt
-./mmult_Orig >> test.txt
-i=$((i+1))
-echo loop: $i >>test.txt
-./mmult_Orig >> test.txt
-i=$((i+1))
-echo loop: $i >>test.txt
-./mmult_Orig >> test.txt
-i=$((i+1))
-echo loop: $i >>test.txt
-./mmult_Orig >> test.txt
-i=$((i+1))
-echo loop: $i >>test.txt
-./mmult_Orig >> test.txt
-i=$((i+1))
-echo loop: $i >>test.txt
-./mmult_Orig >> test.txt
-i=$((i+1))
-echo loop: $i >>test.txt
-./mmult_Orig >> test.txt
-i=$((i+1))
-echo loop: $i >>test.txt
-./mmult_Orig >> test.txt
-i=$((i+1))
-echo loop: $i >>test.txt
-./mmult_Orig >> test.txt
+echo "Bytes,L1 Misses, L2 Misses, L3 Misses, Total Instructions, Time (s);";
 
-echo ""
-echo ""
-echo "*****************************"
-echo ""
-echo ""
+fileName="dif_mmult"
+size=40
 
-echo Versao inversa >>test.txt
-i=0
-echo loop: $i >>test.txt
-./mmult_Inverted >> test.txt
-i=$((i+1))
-echo loop: $i >>test.txt
-./mmult_Inverted >> test.txt
-i=$((i+1))
-echo loop: $i >>test.txt
-./mmult_Inverted >> test.txt
-i=$((i+1))
-echo loop: $i >>test.txt
-./mmult_Inverted >> test.txt
-i=$((i+1))
-echo loop: $i >>test.txt
-./mmult_Inverted >> test.txt
-i=$((i+1))
-echo loop: $i >>test.txt
-./mmult_Inverted >> test.txt
-i=$((i+1))
-echo loop: $i >>test.txt
-./mmult_Inverted >> test.txt
-i=$((i+1))
-echo loop: $i >>test.txt
-./mmult_Inverted >> test.txt
-i=$((i+1))
-echo loop: $i >>test.txt
-./mmult_Inverted >> test.txt
-i=$((i+1))
-echo loop: $i >>test.txt
-./mmult_Inverted >> test.txt
-i=$((i+1))
+a=0
+
+while [ $a -lt 8 ]
+do
+   ./$fileName $size
+
+   a=`expr $a + 1`
+done

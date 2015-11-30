@@ -17,7 +17,7 @@
 
 /* Multiplicador de matrizes*/
 
-void mmult(int **a, int **b, int **result, int n ) {
+void mmult(float **a, float **b, float **result, int n ) {
 	int i, j, k;
 
 	for ( i = 0; i < n; i++)
@@ -44,9 +44,9 @@ void mmult(int **a, int **b, int **result, int n ) {
  	//printf("%d\n",matrixSize);
 
  	/*Inicializar variaveis*/
- 	int **matrizA;
- 	int **matrizB;
- 	int **matrizR;/*Matriz resultado*/
+ 	float **matrizA;
+ 	float **matrizB;
+ 	float **matrizR;/*Matriz resultado*/
 
  	/*Eventos Papi*/
  	int Events[NUM_EVENTS]= {PAPI_L1_TCM, PAPI_L2_TCM, PAPI_L3_TCM, PAPI_TOT_INS};
@@ -70,19 +70,19 @@ void mmult(int **a, int **b, int **result, int n ) {
  	}
 
 
- 	if (( matrizA = malloc( matrixSize*sizeof( int* ))) == NULL )
+ 	if (( matrizA = malloc( matrixSize*sizeof( float* ))) == NULL )
  		{ return 0; }
- 	if (( matrizB = malloc( matrixSize*sizeof( int* ))) == NULL )
+ 	if (( matrizB = malloc( matrixSize*sizeof( float* ))) == NULL )
  		{ return 0; }
- 	if (( matrizR = malloc( matrixSize*sizeof( int* ))) == NULL )
+ 	if (( matrizR = malloc( matrixSize*sizeof( float* ))) == NULL )
  		{ return 0; }
 
  	for ( i = 0; i < matrixSize; i++ ){
- 	  	if (( matrizA[i] = malloc( matrixSize*sizeof(int ) )) == NULL )
+ 	  	if (( matrizA[i] = malloc( matrixSize*sizeof(float ) )) == NULL )
  		  	{ return 0; }
- 		if (( matrizB[i] = malloc( matrixSize*sizeof(int) )) == NULL )
+ 		if (( matrizB[i] = malloc( matrixSize*sizeof(float) )) == NULL )
  		  	{ return 0; }
- 		if (( matrizR[i] = malloc( matrixSize*sizeof(int) )) == NULL )
+ 		if (( matrizR[i] = malloc( matrixSize*sizeof(float) )) == NULL )
  		  	{ return 0; }
  	}
 
@@ -91,8 +91,8 @@ void mmult(int **a, int **b, int **result, int n ) {
 
  	/*Gerar matrizes com elementos aleatorios*/
 
-   for ( i = 0; i < matrixSize; ++i) {
-     for ( j = 0; j < matrixSize; ++j) {
+   for ( i = 0; i < matrixSize; i++) {
+     for ( j = 0; j < matrixSize; j++) {
        matrizA[i][j] = ((float) rand()) / (((float) RAND_MAX)*MAX_RAND_NUMBER);
        matrizB[i][j] = ((float) rand()) / (((float) RAND_MAX)*MAX_RAND_NUMBER);
      }
@@ -136,7 +136,7 @@ void mmult(int **a, int **b, int **result, int n ) {
 
  	//printf("Concluido em %f segundos.\n\n", (end-start));
 
- 	printf("%lld,%lld,%lld,%lld,%lld,%f;",bytes,values[0],values[1],values[2],values[3],(end-start));
+ 	printf("%lld,%lld,%lld,%lld,%lld,%f;\n",bytes,values[0],values[1],values[2],values[3],(end-start));
 
  	return 1;
  }

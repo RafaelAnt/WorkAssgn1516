@@ -32,6 +32,19 @@ void mmult(float **a, float **b, float **result, int n ) {
 }
 
 
+void printMat(float **mat, int n){
+	int i, j;
+
+	for( i = 0 ; i < n ; i++ ){
+		for( j = 0 ; j < n ; j++ ){
+			printf("%f ", mat[i][j]);
+		}
+		printf("\n");
+	}
+
+}
+
+
 /*
  * recebebe como parametros (altura e largura da 1� matriz)
  */
@@ -99,7 +112,7 @@ int main(int argc, char *argv[]) {
   for ( i = 0; i < matrixSize; i++) {
     for ( j = 0; j < matrixSize; j++) {
       matrizA[i][j] = ((float) rand()) / (((float) RAND_MAX)*MAX_RAND_NUMBER);
-      matrizB[i][j] = ((float) rand()) / (((float) RAND_MAX)*MAX_RAND_NUMBER);
+      matrizB[i][j] = 1;
     }
   }
 
@@ -112,7 +125,7 @@ int main(int argc, char *argv[]) {
 	PAPI_start(EventSet);
 
 	// calcular produto das matrizes
-	mmult(matrizA, matrizB, matrizR, matrixSize);
+	mmult(matrizB, matrizA, matrizR, matrixSize);
 
 
 
@@ -125,7 +138,7 @@ int main(int argc, char *argv[]) {
 	/*imprimir resultados*/
 	//printf("\n\n");
 	//printf("Tamanho de cada matriz: ");
-	  long long int bytes = sizeof(float) * matrixSize * matrixSize;
+	long long int bytes = sizeof(float) * matrixSize * matrixSize;
 	  //if(bytes<=1024)  printf("%.3f bytes...\n", (double) bytes);
 	  //if(bytes>1024 && bytes <= 1024*1024)  printf("%.3f Kbytes...\n", (double) bytes/1024);
 	  //if(bytes>1024*1024)  printf("%.3f Mbytes...\n", (double) bytes/(1024*1024));
@@ -142,6 +155,8 @@ int main(int argc, char *argv[]) {
 	//printf("Concluido em %f segundos.\n\n", (end-start));
 
 	printf("%lld,%lld,%lld,%lld,%lld,%f;\n",bytes,values[0],values[1],values[2],values[3],(end-start));
+
+	//printMat(matrizR,matrixSize);
 
 	return 1;
 }
