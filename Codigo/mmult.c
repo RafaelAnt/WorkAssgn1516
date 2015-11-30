@@ -2,7 +2,7 @@
 #include <time.h>
 #include <stdlib.h>
 
-#include <papi.h>
+#include "papi.h"
 
 #define NUM_EVENTS 4
 #define MAX_RAND_NUMBER 100
@@ -16,15 +16,16 @@
 
 void mmult(float **a, float **b, float **result, int n ) {
 	int i, j, k;
-	float r;
-
-	for ( i = 0; i < n; i++)
-    for ( j = 0; j < n; j++){
-	 	  r=0;
-	 	  for ( k = 0; k < n; k++)
-      	r += a[i][k] * b[k][j];
-		  result[i][j] =r;
+	#pragma vector always
+	#pragma ivdep
+	for ( i = 0; i < n; i++){
+		for ( j = 0; j < n; j++){
+			for ( k = 0; k < n; k++){
+				result[i][j] += a[i][k] * b[k][j];
+			}
 		}
+	}
+
 
 }
 
