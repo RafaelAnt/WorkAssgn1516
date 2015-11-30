@@ -1,0 +1,2 @@
+gcc -fopenmp -L/usr/local/lib -I/usr/local/lib/include mmult.c -lpapi
+
