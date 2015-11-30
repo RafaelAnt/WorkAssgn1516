@@ -99,7 +99,7 @@ int main(int argc, char *argv[]) {
 	PAPI_start(EventSet);
 
 	// calcular produto das matrizes
-	mmult(matrizA, matrizB, matrizR, matrixSize);
+	mmult(matrizB, matrizA, matrizR, matrixSize);
 
 	/*Finalizar Papi*/
 	PAPI_stop(EventSet,values);
@@ -110,20 +110,21 @@ int main(int argc, char *argv[]) {
 	/*imprimir resultados*/
 	float segundos = (end-start)/1000000;
 	long long int bytes = sizeof(float) * matrixSize * matrixSize;
-	long long int flops = (matrixSize * matrixSize * matrixSize) * 3;
-	double gflops = flops/segundos;
-	gflops = gflops/(1000000000);
-	double opeationIntensity = flops/bytes;
-	printf("%lld,%lld,%lld,%lld,%lld,%f,%lld,%f,%f;\n",
+	//long long int flops = (matrixSize * matrixSize * matrixSize) * 3;
+	//double gflops = flops/segundos;
+	//gflops = gflops/(1000000000);
+	//double opeationIntensity = flops/bytes;
+	//printf("%lld,%lld,%lld,%lld,%lld,%f,%lld,%f,%f;\n",
+	printf("%lld,%lld,%lld,%lld,%lld,%f;\n",
 	bytes,
 	values[0],
 	values[1],
 	values[2],
 	values[3],
-	segundos,
-	flops,
-	gflops,
-	opeationIntensity
+	segundos
+	//flops,
+	//gflops,
+	//opeationIntensity
   );
 
 	return 1;

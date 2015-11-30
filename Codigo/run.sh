@@ -2,8 +2,8 @@
 
 echo "Bytes,L1 Misses, L2 Misses, L3 Misses, Total Instructions, Time (s);";
 
-fileName="dif_mmult"
-size=40
+fileName="mmult_matB_only1"
+size=1000
 
 a=0
 
