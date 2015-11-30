@@ -8,7 +8,7 @@
 
 #define NUM_EVENTS 4
 #define MAX_RAND_NUMBER 100
-#define MATRIX_SIZE 10000
+#define MATRIX_SIZE 100
 
 
 

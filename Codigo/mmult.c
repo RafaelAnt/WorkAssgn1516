@@ -3,12 +3,12 @@
 #include <stdlib.h>
 #include <omp.h>
 
-#include "papi.h"
+#include <papi.h>
 
 
 #define NUM_EVENTS 4
 #define MAX_RAND_NUMBER 100
-#define MATRIX_SIZE 10000
+#define MATRIX_SIZE 1000
 
 
 
@@ -17,7 +17,7 @@
 
 void mmult(int **a, int **b, int **result, int n ) {
 	int i, j, k;
-	
+
 	for ( i = 0; i < n; i++)
     for ( j = 0; j < n; j++)
 	 	 for ( k = 0; k < n; k++)
@@ -26,22 +26,22 @@ void mmult(int **a, int **b, int **result, int n ) {
 
 
 /*
- * recebebe como parametros (altura e largura da 1ª matriz)
+ * recebebe como parametros (altura e largura da 1Âª matriz)
  */
 int main(int argc, char *argv[]) {
-	
+
 
 printf("Teste");
 	int matrizSize = MATRIX_SIZE;
 	int i, j;
-	
+
 	printf("Teste");
-	
+
 	/*Inicializar variaveis*/
-	int **matrizA; 
+	int **matrizA;
 	int **matrizB;
 	int **matrizR;/*Matriz resultado*/
-	
+
 	/*Eventos Papi*/
 	int Events[NUM_EVENTS]= {PAPI_L1_TCM, PAPI_L2_TCM, PAPI_L3_TCM, PAPI_TOT_INS};
 	int EventSet;
@@ -52,7 +52,7 @@ printf("Teste");
 	PAPI_create_eventset(&EventSet);
 	/* Add Flops and total cycles to the eventset */
 	PAPI_add_events(EventSet,Events,NUM_EVENTS);
-	
+
 
 	if (( matrizA = malloc( MATRIX_SIZE*sizeof( int* ))) == NULL )
 		{ return 0; }
@@ -62,19 +62,19 @@ printf("Teste");
 		{ return 0; }
 
 	for ( i = 0; i < MATRIX_SIZE; i++ ){
-	  	if (( matrizA[i] = malloc( sizeof(int) )) == NULL )
+	  	if (( matrizA[i] = malloc( MATRIX_SIZE*sizeof(int ) )) == NULL )
 		  	{ return 0; }
-		if (( matrizA[i] = malloc( sizeof(int) )) == NULL )
+		if (( matrizB[i] = malloc( MATRIX_SIZE*sizeof(int) )) == NULL )
 		  	{ return 0; }
-		if (( matrizA[i] = malloc( sizeof(int) )) == NULL )
-		  	{ return 0; }		  
+		if (( matrizR[i] = malloc( MATRIX_SIZE*sizeof(int) )) == NULL )
+		  	{ return 0; }
 	}
 
 printf("Teste- Alocou a matriz");
-	
-	
+
+
 	/*Gerar matrizes com elementos aleatorios*/
-	
+
   for ( i = 0; i < MATRIX_SIZE; ++i) {
     for ( j = 0; j < MATRIX_SIZE; ++j) {
       matrizA[i][j] = ((float) rand()) / (((float) RAND_MAX)*MAX_RAND_NUMBER);
@@ -83,30 +83,30 @@ printf("Teste- Alocou a matriz");
   }
 
 printf("Teste - Adicionou os random");
-	
+
 	/* Iniciar contador de tempo*/
 	double start = omp_get_wtime();
-	
+
 	/*iniciar papi*/
 	PAPI_start(EventSet);
-	
+
 	// calcular produto das matrizes
 	mmult(matrizA, matrizB, matrizR, matrizSize);
 
 printf("Teste - calculou a matriz");
-	
+
 	/*Finalizar Papi*/
 	PAPI_stop(EventSet,values);
-	
+
 	/*finalizar contador de tempo*/
 	double end = omp_get_wtime();
-	
+
 	/*imprimir resultados*/
-	
+
 	printf("PAPI_L1_TCM= %lli\n PAPI_L2_TCM = %lli\n PAPI_L3_TCM = %lli\n PAPI_TOT_INS = %lli\n", values[0],values[1],values[2],values[3]);
-	
+
 	printf("Cocluido em %f segundos.\n", (end-start));
-	
-	
+
+
 	return 1;
 }

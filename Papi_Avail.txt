@@ -139,3 +139,4 @@ PAPI_REF_CYC 0x8000006b  Yes   No   Reference clock cycles
 Of 108 possible events, 56 are available, of which 12 are derived.
 
 avail.c                                     PASSED
+
