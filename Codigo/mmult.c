@@ -16,11 +16,16 @@
 
 void mmult(float **a, float **b, float **result, int n ) {
 	int i, j, k;
+	float r;
 
 	for ( i = 0; i < n; i++)
-    for ( j = 0; j < n; j++)
-	 	 for ( k = 0; k < n; k++)
-       result[i][j] += a[i][k] * b[k][j];
+    for ( j = 0; j < n; j++){
+	 	  r=0;
+	 	  for ( k = 0; k < n; k++)
+      	r += a[i][k] * b[k][j];
+		  result[i][j] =r;
+		}
+
 }
 
 
@@ -92,25 +97,41 @@ void mmult(float **a, float **b, float **result, int n ) {
      }
    }
 
- 	/* Iniciar contador de tempo*/
- 	double start = PAPI_get_real_usec();
+/*iniciar papi*/
+	PAPI_start(EventSet);
+	/* Iniciar contador de tempo*/
 
- 	/*iniciar papi*/
- 	PAPI_start(EventSet);
+	double start = PAPI_get_real_usec();
 
- 	// calcular produto das matrizes
- 	mmult(matrizA, matrizB, matrizR, matrixSize);
+	// calcular produto das matrizes
+	mmult(matrizA, matrizB, matrizR, matrixSize);
 
- 	/*Finalizar Papi*/
- 	PAPI_stop(EventSet,values);
+	/*finalizar contador de tempo*/
+	double end = PAPI_get_real_usec();
 
- 	/*finalizar contador de tempo*/
- 	double end = PAPI_get_real_usec();
+	/*Finalizar Papi*/
+	PAPI_stop(EventSet,values);
 
- 	/*imprimir resultados*/
 
- 	long long int bytes = sizeof(float) * matrixSize * matrixSize;
- 	printf("%lld,%lld,%lld,%lld,%lld,%f;\n",bytes,values[0],values[1],values[2],values[3],(end-start)/1000000);
+	/*imprimir resultados*/
+	float segundos = (end-start)/1000000;
+	long long int bytes = sizeof(float) * matrixSize * matrixSize;
+	long long int flops = ((long long int)matrixSize * (long long int)matrixSize * (long long int)matrixSize) * 3;
+	double gflops = flops/segundos;
+	gflops = gflops/(1000000000);
+	double opeationIntensity = flops/bytes;
+
+	printf("%lld,%lld,%lld,%lld,%lld,%f,%lld,%f,%f;\n",
+	bytes,
+	values[0],
+	values[1],
+	values[2],
+	values[3],
+	segundos,
+	flops,
+	gflops,
+	opeationIntensity
+  );
 
  	return 1;
  }

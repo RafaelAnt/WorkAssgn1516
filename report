@@ -1,8 +1,8 @@
 comando para compilar:
 
-gcc -o mmult -fopenmp -L/usr/local/lib -I/usr/local/lib/include mmult.c -lpapi
-gcc -o dif_mmult -fopenmp -L/usr/local/lib -I/usr/local/lib/include mmult_Diferent_order.c -lpapi
-gcc -o mmult_matB_only1 -fopenmp -L/usr/local/lib -I/usr/local/lib/include mmult_matB_only1.c -lpapi
+gcc -O2 -o mmult -fopenmp -L/usr/local/lib -I/usr/local/lib/include mmult.c -lpapi
+gcc -O2 -o dif_mmult -fopenmp -L/usr/local/lib -I/usr/local/lib/include mmult_Diferent_order.c -lpapi
+gcc -O2 -o mmult_matB_only1 -fopenmp -L/usr/local/lib -I/usr/local/lib/include mmult_matB_only1.c -lpapi
 
 -ftree-vectorize
 -ftree-vectorizer-verbose
