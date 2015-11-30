@@ -1,24 +1,15 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
-#include <omp.h>
 
 #include "papi.h"
 
-
 #define NUM_EVENTS 4
 #define MAX_RAND_NUMBER 100
-//#define MATRIX_SIZE 40
 
 //L1 cache = 32KB (por core)
 //L2 cache = 256KB (por core)
 //L3 cache = 6MB (partilhada)
-
-//Size 40 = 18 KB
-//Size 120 = 168 KB
-//Size 500 = 2.861 MB
-//Size 1000 = 11.444 MB
-
 
 /* Multiplicador de matrizes*/
 
@@ -91,9 +82,6 @@ int main(int argc, char *argv[]) {
 		  	{ return 0; }
 	}
 
-
-
-
 	/*Gerar matrizes com elementos aleatorios*/
 
   for ( i = 0; i < matrixSize; i++) {
@@ -103,10 +91,9 @@ int main(int argc, char *argv[]) {
     }
   }
 
-
-
 	/* Iniciar contador de tempo*/
-	double start = omp_get_wtime();
+
+	double start = PAPI_get_real_usec();
 
 	/*iniciar papi*/
 	PAPI_start(EventSet);
@@ -114,34 +101,15 @@ int main(int argc, char *argv[]) {
 	// calcular produto das matrizes
 	mmult(matrizA, matrizB, matrizR, matrixSize);
 
-
-
 	/*Finalizar Papi*/
 	PAPI_stop(EventSet,values);
 
 	/*finalizar contador de tempo*/
-	double end = omp_get_wtime();
+	double end = PAPI_get_real_usec();
 
 	/*imprimir resultados*/
-	//printf("\n\n");
-	//printf("Tamanho de cada matriz: ");
-	  long long int bytes = sizeof(float) * matrixSize * matrixSize;
-	  //if(bytes<=1024)  printf("%.3f bytes...\n", (double) bytes);
-	  //if(bytes>1024 && bytes <= 1024*1024)  printf("%.3f Kbytes...\n", (double) bytes/1024);
-	  //if(bytes>1024*1024)  printf("%.3f Mbytes...\n", (double) bytes/(1024*1024));
-		//bytes = bytes * 3;
-	//printf("Tamanho Total: ");
-		//if(bytes<=1024)  printf("%.3f bytes...\n", (double) bytes);
-		//if(bytes>1024 && bytes <= 1024*1024)  printf("%.3f Kbytes...\n", (double) bytes/1024);
-		//if(bytes>1024*1024)  printf("%.3f Mbytes...\n", (double) bytes/(1024*1024));
-
-
-	//printf("\nTamanho de cada matriz = %ld Bytes\n\n",sizeof(float)*matrixSize*matrixSize);
-	//printf("\nPAPI_L1_TCM= %lld\nPAPI_L2_TCM = %lld\nPAPI_L3_TCM = %lld\nPAPI_TOT_INS = %lld\n\n", values[0],values[1],values[2],values[3]);
-
-	//printf("Concluido em %f segundos.\n\n", (end-start));
-
-	printf("%lld,%lld,%lld,%lld,%lld,%f;\n",bytes,values[0],values[1],values[2],values[3],(end-start));
+	long long int bytes = sizeof(float) * matrixSize * matrixSize;
+	printf("%lld,%lld,%lld,%lld,%lld,%f;\n",bytes,values[0],values[1],values[2],values[3],(end-start)/1000000);
 
 	return 1;
 }
