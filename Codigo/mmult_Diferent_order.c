@@ -108,8 +108,23 @@ int main(int argc, char *argv[]) {
 	double end = PAPI_get_real_usec();
 
 	/*imprimir resultados*/
+	float segundos = (end-start)/1000000;
 	long long int bytes = sizeof(float) * matrixSize * matrixSize;
-	printf("%lld,%lld,%lld,%lld,%lld,%f;\n",bytes,values[0],values[1],values[2],values[3],(end-start)/1000000);
+	long long int flops = (matrixSize * matrixSize * matrixSize) * 3;
+	double gflops = flops/segundos;
+	gflops = gflops/(1000000000);
+	double opeationIntensity = flops/bytes;
+	printf("%lld,%lld,%lld,%lld,%lld,%f,%lld,%f,%f;\n",
+	bytes,
+	values[0],
+	values[1],
+	values[2],
+	values[3],
+	segundos,
+	flops,
+	gflops,
+	opeationIntensity
+  );
 
 	return 1;
 }
