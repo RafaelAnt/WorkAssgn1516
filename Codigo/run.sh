@@ -2,7 +2,7 @@
 
 echo "Bytes,L1 Misses, L2 Misses, L3 Misses, Total Instructions, Time (s), FLOP, GFLOPS, Operational Intensity;";
 
-fileName="mmult"
+fileName="mmult_matB_only1"
 size=40
 
 a=0
@@ -27,6 +27,7 @@ do
    a=`expr $a + 1`
 done
 
+echo ";"
 size=600
 
 a=0
@@ -37,7 +38,7 @@ do
 
    a=`expr $a + 1`
 done
-
+echo ";"
 size=1000
 
 a=0

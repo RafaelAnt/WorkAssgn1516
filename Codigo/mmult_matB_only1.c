@@ -122,7 +122,7 @@ int main(int argc, char *argv[]) {
 	double start = PAPI_get_real_usec();
 
 	// calcular produto das matrizes
-	mmult(matrizA, matrizB, matrizR, matrixSize);
+	mmult(matrizB, matrizA, matrizR, matrixSize);
 
 	/*finalizar contador de tempo*/
 	double end = PAPI_get_real_usec();
