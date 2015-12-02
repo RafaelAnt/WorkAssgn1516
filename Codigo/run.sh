@@ -1,51 +1,5 @@
 #!/bin/sh
 
-echo "Bytes,L1 Misses, L2 Misses, L3 Misses, Total Instructions, Time (s), FLOP, GFLOPS, Operational Intensity;";
-
-fileName="mmult_matB_only1"
-size=40
-
-a=0
-
-while [ $a -lt 8 ]
-do
-   ./$fileName $size
-
-   a=`expr $a + 1`
-done
-
-echo ";"
-
-size=120
-
-a=0
-
-while [ $a -lt 8 ]
-do
-   ./$fileName $size
-
-   a=`expr $a + 1`
-done
-
-echo ";"
-size=600
-
-a=0
-
-while [ $a -lt 8 ]
-do
-   ./$fileName $size
-
-   a=`expr $a + 1`
-done
-echo ";"
-size=1000
-
-a=0
-
-while [ $a -lt 8 ]
-do
-   ./$fileName $size
-
-   a=`expr $a + 1`
-done
+fileName="mmult_ijk"
+echo "Bytes;L1 Misses;L2 Misses;L3 Misses;Total Instructions;RAM Accesses p/ Instruction;Time (s);FLOP;GFLOPS;Operational Intensity;" > $fileName.csv
+./$fileName >> $fileName.csv

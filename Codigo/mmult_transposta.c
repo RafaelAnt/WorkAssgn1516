@@ -16,20 +16,42 @@
 //L2 cache = 256KB (por core)
 //L3 cache = 6MB (partilhada)
 
+float** transpose(float ** m,int n){
+  float** aux;
+  int i,j;
+
+  if (( aux = malloc( n * sizeof( float* ))) == NULL )
+    { printf("FATAL ERROR!\n"); }
+
+  for ( i = 0; i < n; i++ ){
+    if (( aux[i] = malloc( n * sizeof(float ) )) == NULL )
+        { printf("FATAL ERROR!\n"); }
+  }
+
+  for(i=0; i<n; i++){
+    for(j=0; j<n; j++){
+      aux[i][j]=m[j][i];
+    }
+  }
+
+  return aux;
+}
 
 /* Multiplicador de matrizes*/
-
 void mmult(float **a, float **b, float **result, int n ) {
 	int i, j, k;
+  float** btrans;
 	//#pragma vector always
 	//#pragma ivdep
+  btrans=transpose(b,n);
 	for ( i = 0; i < n; i++){
 		for ( j = 0; j < n; j++){
 			for ( k = 0; k < n; k++){
-				result[i][j] += a[i][k] * b[k][j];
+				result[i][j] += a[i][k] * btrans[j][k];
 			}
 		}
 	}
+  free(btrans);
 }
 
 void printMat(float **mat, int n){
@@ -95,7 +117,7 @@ int createAndMult(int EventSet, int matrixSize){
 	for ( i = 0; i < matrixSize; i++) {
 	 for ( j = 0; j < matrixSize; j++) {
 		 matrizA[i][j] = ((float) rand()) / (((float) RAND_MAX)*MAX_RAND_NUMBER);
-		 matrizB[i][j] = 1;
+		 matrizB[i][j] = ((float) rand()) / (((float) RAND_MAX)*MAX_RAND_NUMBER);
 	 }
 	}
 

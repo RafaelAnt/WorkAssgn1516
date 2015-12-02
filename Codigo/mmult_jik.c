@@ -23,8 +23,8 @@ void mmult(float **a, float **b, float **result, int n ) {
 	int i, j, k;
 	//#pragma vector always
 	//#pragma ivdep
-	for ( i = 0; i < n; i++){
-		for ( j = 0; j < n; j++){
+	for ( j = 0; j < n; j++){
+		for ( i = 0; i < n; i++){
 			for ( k = 0; k < n; k++){
 				result[i][j] += a[i][k] * b[k][j];
 			}
@@ -95,7 +95,7 @@ int createAndMult(int EventSet, int matrixSize){
 	for ( i = 0; i < matrixSize; i++) {
 	 for ( j = 0; j < matrixSize; j++) {
 		 matrizA[i][j] = ((float) rand()) / (((float) RAND_MAX)*MAX_RAND_NUMBER);
-		 matrizB[i][j] = 1;
+		 matrizB[i][j] = ((float) rand()) / (((float) RAND_MAX)*MAX_RAND_NUMBER);
 	 }
 	}
 

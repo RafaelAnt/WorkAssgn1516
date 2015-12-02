@@ -95,7 +95,7 @@ int createAndMult(int EventSet, int matrixSize){
 	for ( i = 0; i < matrixSize; i++) {
 	 for ( j = 0; j < matrixSize; j++) {
 		 matrizA[i][j] = ((float) rand()) / (((float) RAND_MAX)*MAX_RAND_NUMBER);
-		 matrizB[i][j] = 1;
+		 matrizB[i][j] = ((float) rand()) / (((float) RAND_MAX)*MAX_RAND_NUMBER);
 	 }
 	}
 
