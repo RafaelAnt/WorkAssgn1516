@@ -1,5 +1,5 @@
 #!/bin/sh
 
-fileName="mmult_ijk"
+fileName="mmult_t_vec"
 echo "Bytes;L1 Misses;L2 Misses;L3 Misses;Total Instructions;RAM Accesses p/ Instruction;Time (s);FLOP;GFLOPS;Operational Intensity;" > $fileName.csv
 ./$fileName >> $fileName.csv
