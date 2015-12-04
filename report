@@ -8,7 +8,12 @@ gcc -O2 -o mmult_t  -L/usr/local/lib -I/usr/local/lib/include mmult_transposta.c
 -ftree-vectorize
 -ftree-vectorizer-verbose
 
-gcc -O2 -o mmult_t_vec -L/usr/local/lib -I/usr/local/lib/include mmult_transposta.c -lpapi -ftree-vectorizer-verbose=2 -march=native
+gcc -O2 -o mmult_t_vec -L/usr/local/lib -I/usr/local/lib/include mmult_t_vec.c -lpapi -march=native -fopt-info-optimized -ftree-vectorize
+
+para o cluster:
+
+gcc -O2 -o mmult_t_vec -L$PAPI_DIR/lib -I$PAPI_DIR/include mmult_t_vec.c -lpapi -march=native -fopt-info-optimized  -ftree-vectorize
+
 
 2.1
 
