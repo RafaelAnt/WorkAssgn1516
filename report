@@ -22,12 +22,11 @@ Ver Papi_events.txt e Papi_Avail.txt
 
 2.2
 
-Ver mmult.c
+Ver mmult_ijk.c
 
 2.3
 
-ver mmult_diferent_order.c
-comparação em comparacao.txt
+ver mmult_jik.c
 
 2.3.1
 
@@ -54,6 +53,10 @@ A*B = linhas iguais
 
 (diferente do enunciado)
 
+Ver:
+mmult_matB_only1_AxB.c
+mmult_matB_only1_BxA.c
+
 2.3.3
 
 Utilizamos k best
@@ -62,6 +65,26 @@ Medições = 8
 Tolerancia = 5%
 
 2.3.4
+
+Gerado para o csv os acessos à RAM por instrução
+
+Explicar que o PAPI_FP_OPS nao está disponivel no nosso CPU
+FLOP são 2 por ciclo, logo as totais são 2 * Size^3
+Visto no assembly da função!!!
+
+Misses tão no CSV...
+
+
+
+2.4
+
+Vec impossivel de fazer
+
+2.5
+
+interpertar coisas
+
+
 
 
 

@@ -1,13 +1,19 @@
 comando para compilar:
 
-gcc -o mmult -fopenmp -L/usr/local/lib -I/usr/local/lib/include mmult.c -lpapi
-gcc -o dif_mmult -fopenmp -L/usr/local/lib -I/usr/local/lib/include mmult_Diferent_order.c -lpapi
-gcc -o mmult_matB_only1 -fopenmp -L/usr/local/lib -I/usr/local/lib/include mmult_matB_only1.c -lpapi
+gcc -O2 -o mmult_ijk  -L/usr/local/lib -I/usr/local/lib/include mmult_ijk.c -lpapi
+gcc -O2 -o mmult_jik  -L/usr/local/lib -I/usr/local/lib/include mmult_jik.c -lpapi
+gcc -O2 -o mmult_matB_only1_AxB  -L/usr/local/lib -I/usr/local/lib/include mmult_matB_only1_AxB.c -lpapi
+gcc -O2 -o mmult_matB_only1_BxA  -L/usr/local/lib -I/usr/local/lib/include mmult_matB_only1_BxA.c -lpapi
+gcc -O2 -o mmult_t  -L/usr/local/lib -I/usr/local/lib/include mmult_t.c -lpapi
 
 -ftree-vectorize
 -ftree-vectorizer-verbose
 
-gcc -o dif_mmult -fopenmp -L/usr/local/lib -I/usr/local/lib/include mmult_Diferent_order.c -lpapi -ftree-vectorize -ftree-vectorizer-verbose
+gcc -O2 -o mmult_t_vec -L/usr/local/lib -I/usr/local/lib/include mmult_t_vec.c -lpapi -march=native -fopt-info-optimized -ftree-vectorize
+
+para o cluster:
+
+gcc -O2 -o mmult_t_vec -L$PAPI_DIR/lib -I$PAPI_DIR/include mmult_t_vec.c -lpapi -march=native -fopt-info-optimized  -ftree-vectorize
 
 
 2.1
@@ -16,12 +22,11 @@ Ver Papi_events.txt e Papi_Avail.txt
 
 2.2
 
-Ver mmult.c
+Ver mmult_ijk.c
 
 2.3
 
-ver mmult_diferent_order.c
-comparação em comparacao.txt
+ver mmult_jik.c
 
 2.3.1
 
@@ -30,9 +35,9 @@ comparação em comparacao.txt
 //L3 cache = 6MB (partilhada)
 
 //Size 40 = 18.75 KB
-//Size 
-//Size 
-//Size 1
+//Size 120 = 168.75 KB
+//Size 600 = 4.12 MB
+//Size 1000 = 11.444 MB
 
 2.3.2
 
@@ -48,6 +53,10 @@ A*B = linhas iguais
 
 (diferente do enunciado)
 
+Ver:
+mmult_matB_only1_AxB.c
+mmult_matB_only1_BxA.c
+
 2.3.3
 
 Utilizamos k best
@@ -56,6 +65,26 @@ Medições = 8
 Tolerancia = 5%
 
 2.3.4
+
+Gerado para o csv os acessos à RAM por instrução
+
+Explicar que o PAPI_... nao está disponivel no nosso CPU
+FLOP são 2 por ciclo, logo as totais são 2 * Size^3
+Visto no assembly da função!!!
+
+Misses tão no CSV...
+
+
+
+2.4
+
+Vec impossivel de fazer
+
+2.5
+
+interpertar coisas
+
+
 
 
 
