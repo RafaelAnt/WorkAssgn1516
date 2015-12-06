@@ -100,7 +100,7 @@ int createAndMult(int EventSet, int matrixSize){
 	// Alocar Espaço para as matrizes
 
   matrizA = (float*) malloc( matrixSize * matrixSize * sizeof( float ));
-  matrizR = (float*) malloc( matrixSize * matrixSize * sizeof( float ));
+  matrizB = (float*) malloc( matrixSize * matrixSize * sizeof( float ));
   matrizR = (float*) malloc( matrixSize * matrixSize * sizeof( float ));
 printf("Cheguei\n");
 	//Gerar matrizes com elementos aleatorios
