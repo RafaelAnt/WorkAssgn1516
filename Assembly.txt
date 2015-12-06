@@ -1,0 +1,49 @@
+mmult:
+.LFB41:
+    .cfi_startproc
+    testl    %ecx, %ecx
+    jle    .L13
+    leal    -1(%rcx), %eax
+    pushq    %rbp
+    .cfi_def_cfa_offset 16
+    .cfi_offset 6, -16
+    movq    %rdx, %rbp
+    pushq    %rbx
+    .cfi_def_cfa_offset 24
+    .cfi_offset 3, -24
+    movq    %rdi, %rbx
+    xorl    %edi, %edi
+    leaq    4(,%rax,4), %rdx
+.L6:
+    movq    0(%rbp,%rdi,8), %r10
+    movq    (%rbx,%rdi,8), %r11
+    xorl    %r8d, %r8d
+    .p2align 4,,10
+    .p2align 3
+.L7:
+    movss    (%r10,%r8), %xmm1
+    xorl    %eax, %eax
+    .p2align 4,,10
+    .p2align 3
+.L4:
+    movq    (%rsi,%rax,8), %r9
+    movss    (%r9,%r8), %xmm0
+    mulss    (%r11,%rax,4), %xmm0
+    addq    $1, %rax
+    cmpl    %eax, %ecx
+    addss    %xmm0, %xmm1
+    movss    %xmm1, (%r10,%r8)
+    jg    .L4
+    addq    $4, %r8
+    cmpq    %rdx, %r8
+    jne    .L7
+    addq    $1, %rdi
+    cmpl    %edi, %ecx
+    jg    .L6
+    popq    %rbx
+    .cfi_restore 3
+    .cfi_def_cfa_offset 16
+    popq    %rbp
+    .cfi_restore 6
+    .cfi_def_cfa_offset 8
+    ret

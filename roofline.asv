@@ -1,0 +1,31 @@
+clear;
+
+%x = [0, 0.25, 0.5, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512];
+x = [0:0.05:32 32:1:1024];
+%x=linspace(0,512);
+y1 = min(13*x,256); %roofline i7
+y2 = min(30*x,256); %roofline xeon
+
+x2 = 30:1:512;
+y3 = 5; %celing de 1 core
+
+figure
+plot(x,y1,'red',x,y2,'blue--',x2,y3,'green-')
+grid on
+ax=gca;
+ax.XLim = [0.25 512];
+ax.XScale = 'log';
+ax.XTick = [0.25 0.5 1 2 4 8 16 32 64 128 256 512];
+ax.XTickLabel = {'0.25';'0.5';'1';'2';'4';'8';'16';'32';'64';'128';'256';'512'};
+
+ax.YLim = [0 512];
+ax.YScale = 'log';
+ax.YTick = [0 1 2 4 8 16 32 64 128 256 512];
+
+title('Roofline Model')
+xlabel('Operational Intensity (FLOPs / Byte)')
+ylabel('GLOPS')
+legend('i7-4720HQ','Xeon E5650','1core only','Location','northwest')
+
+
+% http://www.mathworks.com/help/matlab/ref/plot.html
