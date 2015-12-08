@@ -19,8 +19,8 @@ float matrizR[MATRIX_SIZE][MATRIX_SIZE];
 
 
 void transpose(float m[MATRIX_SIZE][MATRIX_SIZE], float ret[MATRIX_SIZE][MATRIX_SIZE]){
- 
-  int i,j; 
+
+  int i,j;
 
 
   for(i=0; i<MATRIX_SIZE; i++){
@@ -28,18 +28,9 @@ void transpose(float m[MATRIX_SIZE][MATRIX_SIZE], float ret[MATRIX_SIZE][MATRIX_
       ret[i][j]=m[j][i];
     }
   }
-}
-void transposeInv(float m[MATRIX_SIZE][MATRIX_SIZE], float ret[MATRIX_SIZE][MATRIX_SIZE]){
- 
-  int i,j; 
 
-
-  for(i=0; i<MATRIX_SIZE; i++){
-    for(j=0; j<MATRIX_SIZE; j++){
-      ret[j][i]=m[i][j];
-    }
-  }
 }
+
 
 /* Multiplicador de matrizes*/
 void mmult(float  a[MATRIX_SIZE][MATRIX_SIZE] , float  b[MATRIX_SIZE][MATRIX_SIZE], float  result[MATRIX_SIZE][MATRIX_SIZE], int  n ) {
@@ -48,25 +39,25 @@ float aux;
 float auxA[MATRIX_SIZE];
 float btrans[MATRIX_SIZE][MATRIX_SIZE];
 float restrans[MATRIX_SIZE][MATRIX_SIZE];
-	transpose(b,btrans);	
+	transpose(b,btrans);
 
     for(j=0;j<n;j++)
     {
         for(i=0;i<n;i++)
         {
-		aux=0;			
+		        aux=0;
             for(k=0;k<n;k++)
             {
-	 	auxA[k] = a[i][k] * btrans[j][k];
+	 	           auxA[k] = a[i][k] * btrans[j][k];
             }
-            
+
             for (l=0;l<n;l++) {
             	aux += auxA[l];
             }
             restrans[j][i] = aux;
         }
     }
-    transposeInv(restrans, result);
+    transpose(restrans, result);
 }
 
 void printMat(float **mat, int n){
@@ -91,14 +82,14 @@ void clearCache(){
 void createAndMult(){
 
 	int matrixSize = MATRIX_SIZE;
-	
+
 	//double * clearcache = malloc(sizeof(float)*10000*10000);
 
 	//Inicializar variaveis
 	int i, j;
  	 //Matriz resultado
 	long long values[NUM_EVENTS];
-	
+
 	/*Eventos Papi*/
  	int Events[NUM_EVENTS]= {PAPI_L1_TCM, PAPI_L2_TCM, PAPI_L3_TCM, PAPI_TOT_INS};
  	int EventSet = PAPI_NULL, retval;
@@ -120,8 +111,8 @@ void createAndMult(){
  		exit(0);
  	}
 
-	
-	
+
+
 	//Gerar matrizes com elementos aleatorios
 	for ( i = 0; i < matrixSize; i++) {
 	 for ( j = 0; j < matrixSize; j++) {
@@ -129,7 +120,7 @@ void createAndMult(){
 		 matrizB[i][j] = ((float) rand()) / (((float) RAND_MAX)*MAX_RAND_NUMBER);
 	 }
 	}
-	
+
 	clearCache();
 	//iniciar papi
 	PAPI_start(EventSet);
@@ -164,7 +155,7 @@ void createAndMult(){
 	opeationalIntensity
 	);
 
-	
+
 }
 
 //*************************************************************
@@ -176,13 +167,13 @@ void createAndMult(){
 	 int i;
 
 	srand(0);
- 	
+
 
 	for (i=0; i<8; i++){
 		createAndMult();
 		srand(i);
 	}
 	printf("\n");
-	
+
  	return 1;
  }

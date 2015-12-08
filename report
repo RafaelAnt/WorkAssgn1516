@@ -1,10 +1,10 @@
 comando para compilar:
 
-gcc -O3 -o mmult_ijk  -L/usr/local/lib -I/usr/local/lib/include mmult_ijk.c -lpapi
-gcc -O3 -o mmult_jik  -L/usr/local/lib -I/usr/local/lib/include mmult_jik.c -lpapi
-gcc -O3 -o mmult_matB_only1_AxB  -L/usr/local/lib -I/usr/local/lib/include mmult_matB_only1_AxB.c -lpapi
-gcc -O3 -o mmult_matB_only1_BxA  -L/usr/local/lib -I/usr/local/lib/include mmult_matB_only1_BxA.c -lpapi
-gcc -O3 -o mmult_t  -L/usr/local/lib -I/usr/local/lib/include mmult_t.c -lpapi
+gcc -O3 -o mmult_ijk  -L/usr/local/lib -I/usr/local/lib/include mmult_ijk.c -lpapi -fno-tree-vectorize
+gcc -O3 -o mmult_jik  -L/usr/local/lib -I/usr/local/lib/include mmult_jik.c -lpapi -fno-tree-vectorize
+gcc -O3 -o mmult_matB_only1_AxB  -L/usr/local/lib -I/usr/local/lib/include mmult_matB_only1_AxB.c -lpapi -fno-tree-vectorize
+gcc -O3 -o mmult_matB_only1_BxA  -L/usr/local/lib -I/usr/local/lib/include mmult_matB_only1_BxA.c -lpapi -fno-tree-vectorize
+gcc -O3 -o mmult_t  -L/usr/local/lib -I/usr/local/lib/include mmult_t.c -lpapi -fno-tree-vectorize
 
 -ftree-vectorize
 -ftree-vectorizer-verbose
@@ -17,9 +17,9 @@ gcc -O2 -o mmult_t_vec -L$PAPI_DIR/lib -I$PAPI_DIR/include mmult_t_vec.c -lpapi 
 
 
 vec:
-g++ -O3 -o mmult_t_Opt2_vec -L/usr/local/lib -I/usr/local/lib/include mmult_t_Opt2.cpp -lpapi -march=native -fopt-info-optimized -Wall
+g++ -O3 -o mmult_t_vec -L/usr/local/lib -I/usr/local/lib/include mmult_t_vec.cpp -lpapi -march=native -fopt-info-optimized -Wall
 oficial
-gcc -O3 -o mmult_t_Opt2_vec -L/usr/local/lib -I/usr/local/lib/include mmult_t_Opt2.c -lpapi -march=native -fopt-info-optimized -Wall
+gcc -O3 -o mmult_t_Opt2_vec -L/usr/local/lib -I/usr/local/lib/include mmult_t_vec.c -lpapi -march=native -fopt-info-optimized -Wall
 
 2.1
 

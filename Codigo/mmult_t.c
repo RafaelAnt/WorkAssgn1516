@@ -41,17 +41,19 @@ float** transpose(float ** m,int n){
 void mmult(float **a, float **b, float **result, int n ) {
 	int i, j, k;
   float** btrans;
+
 	//#pragma vector always
 	//#pragma ivdep
   btrans=transpose(b,n);
-	for ( i = 0; i < n; i++){
-		for ( j = 0; j < n; j++){
+	for ( j = 0; j < n; j++){
+		for ( i = 0; i < n; i++){
 			for ( k = 0; k < n; k++){
-				result[i][j] += a[i][k] * btrans[j][k];
+				result[j][i] += a[i][k] * btrans[j][k];
 			}
 		}
 	}
   free(btrans);
+  result=transpose(result,n);
 }
 
 void printMat(float **mat, int n){
