@@ -1,10 +1,10 @@
 comando para compilar:
 
-gcc -O2 -o mmult_ijk  -L/usr/local/lib -I/usr/local/lib/include mmult_ijk.c -lpapi
-gcc -O2 -o mmult_jik  -L/usr/local/lib -I/usr/local/lib/include mmult_jik.c -lpapi
-gcc -O2 -o mmult_matB_only1_AxB  -L/usr/local/lib -I/usr/local/lib/include mmult_matB_only1_AxB.c -lpapi
-gcc -O2 -o mmult_matB_only1_BxA  -L/usr/local/lib -I/usr/local/lib/include mmult_matB_only1_BxA.c -lpapi
-gcc -O2 -o mmult_t  -L/usr/local/lib -I/usr/local/lib/include mmult_t.c -lpapi
+gcc -O3 -o mmult_ijk  -L/usr/local/lib -I/usr/local/lib/include mmult_ijk.c -lpapi
+gcc -O3 -o mmult_jik  -L/usr/local/lib -I/usr/local/lib/include mmult_jik.c -lpapi
+gcc -O3 -o mmult_matB_only1_AxB  -L/usr/local/lib -I/usr/local/lib/include mmult_matB_only1_AxB.c -lpapi
+gcc -O3 -o mmult_matB_only1_BxA  -L/usr/local/lib -I/usr/local/lib/include mmult_matB_only1_BxA.c -lpapi
+gcc -O3 -o mmult_t  -L/usr/local/lib -I/usr/local/lib/include mmult_t.c -lpapi
 
 -ftree-vectorize
 -ftree-vectorizer-verbose
@@ -15,6 +15,11 @@ para o cluster:
 
 gcc -O2 -o mmult_t_vec -L$PAPI_DIR/lib -I$PAPI_DIR/include mmult_t_vec.c -lpapi -march=native -fopt-info-optimized  -ftree-vectorize
 
+
+vec:
+g++ -O3 -o mmult_t_Opt2_vec -L/usr/local/lib -I/usr/local/lib/include mmult_t_Opt2.cpp -lpapi -march=native -fopt-info-optimized -Wall
+oficial
+gcc -O3 -o mmult_t_Opt2_vec -L/usr/local/lib -I/usr/local/lib/include mmult_t_Opt2.c -lpapi -march=native -fopt-info-optimized -Wall
 
 2.1
 
