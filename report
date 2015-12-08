@@ -18,7 +18,16 @@ gcc -O2 -o mmult_t_vec -L$PAPI_DIR/lib -I$PAPI_DIR/include mmult_t_vec.c -lpapi 
 
 2.1
 
-Ver Papi_events.txt e Papi_Avail.txt
+ver Papi_Avail.txt
+
+papi Events utilizados
+
+PAPI_L1_TCM
+PAPI_L2_TCM
+PAPI_L3_TCM
+
+PAPI_TOT_INS
+
 
 2.2
 
