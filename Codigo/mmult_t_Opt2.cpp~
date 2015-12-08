@@ -6,7 +6,7 @@
 
 #define NUM_EVENTS 4
 #define MAX_RAND_NUMBER 100
-#define MATRIX_SIZE 40
+#define MATRIX_SIZE 1000
 
 
 //L1 cache = 32KB (por core)
@@ -16,7 +16,7 @@
 float matrizA[MATRIX_SIZE][MATRIX_SIZE];
 float matrizB[MATRIX_SIZE][MATRIX_SIZE];
 float matrizR[MATRIX_SIZE][MATRIX_SIZE];
-float btrans[MATRIX_SIZE][MATRIX_SIZE];
+
 
 void transpose(float m[MATRIX_SIZE][MATRIX_SIZE], float ret[MATRIX_SIZE][MATRIX_SIZE]){
  
@@ -29,26 +29,44 @@ void transpose(float m[MATRIX_SIZE][MATRIX_SIZE], float ret[MATRIX_SIZE][MATRIX_
     }
   }
 }
+void transposeInv(float m[MATRIX_SIZE][MATRIX_SIZE], float ret[MATRIX_SIZE][MATRIX_SIZE]){
+ 
+  int i,j; 
+
+
+  for(i=0; i<MATRIX_SIZE; i++){
+    for(j=0; j<MATRIX_SIZE; j++){
+      ret[j][i]=m[i][j];
+    }
+  }
+}
 
 /* Multiplicador de matrizes*/
 void mmult(float  a[MATRIX_SIZE][MATRIX_SIZE] , float  b[MATRIX_SIZE][MATRIX_SIZE], float  result[MATRIX_SIZE][MATRIX_SIZE], int  n ) {
-int i,j,k;
+int i,j,k, l;
 float aux;
-		
+float auxA[MATRIX_SIZE];
+float btrans[MATRIX_SIZE][MATRIX_SIZE];
+float restrans[MATRIX_SIZE][MATRIX_SIZE];
+	transpose(b,btrans);	
 
     for(j=0;j<n;j++)
     {
         for(i=0;i<n;i++)
         {
-		aux =0;				
+		aux=0;			
             for(k=0;k<n;k++)
             {
-	
-	aux = aux + a[i][k] * b[j][k];
+	 	auxA[k] = a[i][k] * btrans[j][k];
             }
-            result[j][i] = aux;
+            
+            for (l=0;l<n;l++) {
+            	aux += auxA[l];
+            }
+            restrans[j][i] = aux;
         }
     }
+    transposeInv(restrans, result);
 }
 
 void printMat(float **mat, int n){
