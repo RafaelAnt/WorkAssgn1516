@@ -4,57 +4,51 @@
 
 #include "papi.h"
 
-#define NUM_EVENTS 3
+#define NUM_EVENTS 4
 #define MAX_RAND_NUMBER 100
-#define MATRIX_SIZE_L1 40
-#define MATRIX_SIZE_L2 120
-#define MATRIX_SIZE_L3 600
-#define MATRIX_SIZE_RAM 1000
+#define MATRIX_SIZE 40
 
 
 //L1 cache = 32KB (por core)
 //L2 cache = 256KB (por core)
 //L3 cache = 6MB (partilhada)
 
-float** transpose(float ** m,int n){
-  float** aux;
-  int i,j;
+float matrizA[MATRIX_SIZE][MATRIX_SIZE];
+float matrizB[MATRIX_SIZE][MATRIX_SIZE];
+float matrizR[MATRIX_SIZE][MATRIX_SIZE];
+float btrans[MATRIX_SIZE][MATRIX_SIZE];
 
-  if (( aux = malloc( n * sizeof( float* ))) == NULL )
-    { printf("FATAL ERROR!\n"); }
+void transpose(float m[MATRIX_SIZE][MATRIX_SIZE], float ret[MATRIX_SIZE][MATRIX_SIZE]){
+ 
+  int i,j; 
 
-  for ( i = 0; i < n; i++ ){
-    if (( aux[i] = malloc( n * sizeof(float ) )) == NULL )
-        { printf("FATAL ERROR!\n"); }
-  }
 
-  for(i=0; i<n; i++){
-    for(j=0; j<n; j++){
-      aux[i][j]=m[j][i];
+  for(i=0; i<MATRIX_SIZE; i++){
+    for(j=0; j<MATRIX_SIZE; j++){
+      ret[i][j]=m[j][i];
     }
   }
-
-  return aux;
 }
 
 /* Multiplicador de matrizes*/
-void mmult(float **a, float **b, float **result, int n ) {
-	int i, j, k;
-  float** btrans;
-  float aux;
-	//#pragma vector always
-	//#pragma ivdep
-  btrans=transpose(b,n);
-	for ( i = 0; i < n; i++){
-		for ( j = 0; j < n; j++){
-			aux = 0;
-			for ( k = 0; k < n; k++){
-				aux += a[i][k] * btrans[j][k];
-			}result[i][j] = aux;
-			
-		}
-	}
-  free(btrans);
+void mmult(float  a[MATRIX_SIZE][MATRIX_SIZE] , float  b[MATRIX_SIZE][MATRIX_SIZE], float  result[MATRIX_SIZE][MATRIX_SIZE], int  n ) {
+int i,j,k;
+float aux;
+		
+
+    for(j=0;j<n;j++)
+    {
+        for(i=0;i<n;i++)
+        {
+		aux =0;				
+            for(k=0;k<n;k++)
+            {
+	
+	aux = aux + a[i][k] * b[j][k];
+            }
+            result[j][i] = aux;
+        }
+    }
 }
 
 void printMat(float **mat, int n){
@@ -76,20 +70,18 @@ void clearCache(){
 			c[j] = i*j;
 }
 
-void createAndMult(int matrixSize){
-
+void createAndMult(){
+	int matrixSize = MATRIX_SIZE;
 	
 	//double * clearcache = malloc(sizeof(float)*10000*10000);
 
 	//Inicializar variaveis
 	int i, j;
- 	float **matrizA;
- 	float **matrizB;
- 	float **matrizR; //Matriz resultado
+ 	 //Matriz resultado
 	long long values[NUM_EVENTS];
 	
 	/*Eventos Papi*/
- 	int Events[NUM_EVENTS]= {PAPI_L1_TCM, PAPI_L2_TCM, PAPI_L3_TCM};
+ 	int Events[NUM_EVENTS]= {PAPI_L1_TCM, PAPI_L2_TCM, PAPI_L3_TCM, PAPI_TOT_INS};
  	int EventSet = PAPI_NULL, retval;
 
  	/* Initialize the Library */
@@ -111,23 +103,6 @@ void createAndMult(int matrixSize){
 
 	
 	
-	// Alocar Espaço para as matrizes
-	if (( matrizA = malloc( matrixSize*sizeof( float* ))) == NULL )
-		{ return; }
-	if (( matrizB = malloc( matrixSize*sizeof( float* ))) == NULL )
-		{ return; }
-	if (( matrizR = malloc( matrixSize*sizeof( float* ))) == NULL )
-		{ return; }
-
-	for ( i = 0; i < matrixSize; i++ ){
-		if (( matrizA[i] = malloc( matrixSize*sizeof(float ) )) == NULL )
-				{ return; }
-		if (( matrizB[i] = malloc( matrixSize*sizeof(float) )) == NULL )
-				{ return; }
-		if (( matrizR[i] = malloc( matrixSize*sizeof(float) )) == NULL )
-				{ return; }
-	}
-
 	//Gerar matrizes com elementos aleatorios
 	for ( i = 0; i < matrixSize; i++) {
 	 for ( j = 0; j < matrixSize; j++) {
@@ -135,6 +110,7 @@ void createAndMult(int matrixSize){
 		 matrizB[i][j] = ((float) rand()) / (((float) RAND_MAX)*MAX_RAND_NUMBER);
 	 }
 	}
+	
 	clearCache();
 	//iniciar papi
 	PAPI_start(EventSet);
@@ -154,14 +130,14 @@ void createAndMult(int matrixSize){
 	double gflops = flops/segundos;
 	gflops = gflops/(1000000000);
 	float opeationalIntensity = (float) flops/(64*values[2]);
-	float ramAccesses = (float) values[1]/values[2];
+	float ramAccesses = (float) values[2]/values[3];
 
-	printf("%lld;%lld;%lld;%lld;%f;%f;%lld;%f;%f\n",
+	printf("%lld;%lld;%lld;%lld;%lld;%f;%f;%lld;%f;%f\n",
 	bytes,					//bytes
 	values[0],			//L1 Misses
 	values[1],			//L2 Misses
 	values[2],			//L3 Misses
-	//values[3],			//Total de Instruções
+	values[3],			//Total de Instruções
 	ramAccesses,		//acessos à RAM por instrução
 	segundos,				//Tempo em segundos
 	flops,					// floating point operations
@@ -169,10 +145,7 @@ void createAndMult(int matrixSize){
 	opeationalIntensity
 	);
 
-	free(matrizA);
-	free(matrizB);
-	free(matrizR);
-	//free(clearcache);
+	
 }
 
 //*************************************************************
@@ -187,22 +160,10 @@ void createAndMult(int matrixSize){
  	
 
 	for (i=0; i<8; i++){
-		createAndMult(MATRIX_SIZE_L1);
+		createAndMult();
 		srand(i);
 	}
 	printf("\n");
-	for (i=0; i<8; i++){
-		createAndMult(MATRIX_SIZE_L2);
-	}
-	printf("\n");
-	for (i=0; i<8; i++){
-		createAndMult(MATRIX_SIZE_L3);
-	}
-	printf("\n");
-	for (i=0; i<8; i++){
-		createAndMult(MATRIX_SIZE_RAM);
-	}
-	printf("\n");
-
+	
  	return 1;
  }

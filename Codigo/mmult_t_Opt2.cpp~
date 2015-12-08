@@ -32,23 +32,23 @@ void transpose(float m[MATRIX_SIZE][MATRIX_SIZE], float ret[MATRIX_SIZE][MATRIX_
 
 /* Multiplicador de matrizes*/
 void mmult(float  a[MATRIX_SIZE][MATRIX_SIZE] , float  b[MATRIX_SIZE][MATRIX_SIZE], float  result[MATRIX_SIZE][MATRIX_SIZE], int  n ) {
-	int i, j, k;
-  
-  float aux;
+int i,j,k;
+float aux;
+		
+
+    for(j=0;j<n;j++)
+    {
+        for(i=0;i<n;i++)
+        {
+		aux =0;				
+            for(k=0;k<n;k++)
+            {
 	
-  transpose(b,btrans);
-	for ( i = 0; i < n; i++){
-		//#pragma GCC ivdep
-		for ( j = 0; j < n; j++){
-			
-			aux = 0;
-			for ( k = 0; k < n; k++){
-				aux += a[i][k] * btrans[j][k];
-			}result[i][j] = aux;
-			
-		}
-	}
-  //free(btrans);
+	aux = aux + a[i][k] * b[j][k];
+            }
+            result[j][i] = aux;
+        }
+    }
 }
 
 void printMat(float **mat, int n){
