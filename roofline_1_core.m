@@ -52,9 +52,13 @@ bxa_y = 0.691783;
 mmult_t_x = 63.487354;
 mmult_t_y = 2.297889;
 
+%ponto vec
+vec_x = 123.7393;
+vec_y = 1.9391;
+
 
 figure
-plot(x1,y1,'red',ilp_x,ilp_y,'magenta-.',fma_x,fma_y,'blue-.',simd_x,simd_y,'black-.',bus_x,bus_y,'green--',ijk_x,ijk_y,'blue^',jik_x,jik_y,'magenta^',mmult_t_x,mmult_t_y,'green^',bxa_x,bxa_y,'cyan^',axb_x,axb_y,'black^')
+plot(x1,y1,'red',ilp_x,ilp_y,'magenta-.',fma_x,fma_y,'blue-.',simd_x,simd_y,'black-.',bus_x,bus_y,'green--',ijk_x,ijk_y,'blue^',jik_x,jik_y,'magenta^',mmult_t_x,mmult_t_y,'green^',bxa_x,bxa_y,'cyan^',axb_x,axb_y,'black^',vec_x,vec_y,'red^')
 grid on
 ax=gca;
 ax.XLim = [0.25 512];
@@ -69,7 +73,7 @@ ax.YTick = [0 1 2 4 8 16 32 64 128 256 512];
 title('i7-4720HQ (1 Core)')
 xlabel('Operational Intensity (FLOPs / Byte)')
 ylabel('GFLOPS')
-legend('Roofline','No-ILP','No-FMA','No-SIMD','1 Mem. Channel','IJK','JIK','Transpose','BxA','AxB','Location','eastoutside')
+legend('Roofline','No-ILP','No-FMA','No-SIMD','1 Mem. Channel','IJK','JIK','Transposed','BxA','AxB','Vectorized','Location','eastoutside')
 
 
 % http://www.mathworks.com/help/matlab/ref/plot.html
