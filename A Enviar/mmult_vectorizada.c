@@ -1,0 +1,179 @@
+#include <stdio.h>
+#include <time.h>
+#include <stdlib.h>
+
+#include "papi.h"
+
+#define NUM_EVENTS 4
+#define MAX_RAND_NUMBER 100
+#define MATRIX_SIZE 1000
+
+
+//L1 cache = 32KB (por core)
+//L2 cache = 256KB (por core)
+//L3 cache = 6MB (partilhada)
+
+float matrizA[MATRIX_SIZE][MATRIX_SIZE];
+float matrizB[MATRIX_SIZE][MATRIX_SIZE];
+float matrizR[MATRIX_SIZE][MATRIX_SIZE];
+
+
+void transpose(float m[MATRIX_SIZE][MATRIX_SIZE], float ret[MATRIX_SIZE][MATRIX_SIZE]){
+
+  int i,j;
+
+
+  for(i=0; i<MATRIX_SIZE; i++){
+    for(j=0; j<MATRIX_SIZE; j++){
+      ret[i][j]=m[j][i];
+    }
+  }
+
+}
+
+
+/* Multiplicador de matrizes*/
+void mmult(float  a[MATRIX_SIZE][MATRIX_SIZE] , float  b[MATRIX_SIZE][MATRIX_SIZE], float  result[MATRIX_SIZE][MATRIX_SIZE], int  n ) {
+int i,j,k, l;
+float aux;
+float auxA[MATRIX_SIZE];
+float btrans[MATRIX_SIZE][MATRIX_SIZE];
+float restrans[MATRIX_SIZE][MATRIX_SIZE];
+	transpose(b,btrans);
+
+    for(j=0;j<n;j++)
+    {
+        for(i=0;i<n;i++)
+        {
+		        aux=0;
+            for(k=0;k<n;k++)
+            {
+	 	           auxA[k] = a[i][k] * btrans[j][k];
+            }
+
+            for (l=0;l<n;l++) {
+            	aux += auxA[l];
+            }
+            restrans[j][i] = aux;
+        }
+    }
+    transpose(restrans, result);
+}
+
+void printMat(float **mat, int n){
+	int i, j;
+
+	for( i = 0 ; i < n ; i++ ){
+		for( j = 0 ; j < n ; j++ ){
+			printf("%f ", mat[i][j]);
+		}
+		printf("\n");
+	}
+}
+
+void clearCache(){
+	const int size =20*1024*1024;
+	char *c = (char *)malloc(size);
+	for (int i =0; i<0xffff; i++)
+		for(int j =0; j<size;j++)
+			c[j] = i*j;
+}
+
+void createAndMult(){
+
+	int matrixSize = MATRIX_SIZE;
+
+	//double * clearcache = malloc(sizeof(float)*10000*10000);
+
+	//Inicializar variaveis
+	int i, j;
+ 	 //Matriz resultado
+	long long values[NUM_EVENTS];
+
+	/*Eventos Papi*/
+ 	int Events[NUM_EVENTS]= {PAPI_L1_TCM, PAPI_L2_TCM, PAPI_L3_TCM, PAPI_TOT_INS};
+ 	int EventSet = PAPI_NULL, retval;
+
+ 	/* Initialize the Library */
+ 	retval = PAPI_library_init(PAPI_VER_CURRENT);
+ 	if (retval != PAPI_VER_CURRENT) {
+ 		fprintf(stderr, "PAPI library init error!\n");
+ 		exit(1);
+ 	}
+ 	/* Allocate space for the new eventset and do setup */
+ 	if (PAPI_create_eventset(&EventSet) != PAPI_OK) {
+ 		printf("Failed to allocate space for the new eventset and do setup\n ");
+ 		exit(0);
+ 	}
+ 	/* Add events to the eventset */
+ 	if (PAPI_add_events(EventSet,Events,NUM_EVENTS) != PAPI_OK) {
+ 		printf("Failed  Add events to the eventset \n");
+ 		exit(0);
+ 	}
+
+
+
+	//Gerar matrizes com elementos aleatorios
+	for ( i = 0; i < matrixSize; i++) {
+	 for ( j = 0; j < matrixSize; j++) {
+		 matrizA[i][j] = ((float) rand()) / (((float) RAND_MAX)*MAX_RAND_NUMBER);
+		 matrizB[i][j] = ((float) rand()) / (((float) RAND_MAX)*MAX_RAND_NUMBER);
+	 }
+	}
+
+	clearCache();
+	//iniciar papi
+	PAPI_start(EventSet);
+	// Iniciar contador de tempo
+	double start = PAPI_get_real_usec();
+	// calcular produto das matrizes
+	mmult(matrizA, matrizB, matrizR, matrixSize);
+	//finalizar contador de tempo
+	double end = PAPI_get_real_usec();
+	//Finalizar Papi
+	PAPI_stop(EventSet,values);
+
+	//imprimir resultados
+	double segundos = (end-start)/1000000.0f;
+	long long int bytes = sizeof(float) * matrixSize * matrixSize;
+	long long int flops = ((long long int)matrixSize * (long long int)matrixSize * (long long int)matrixSize) * 2;
+	double gflops = flops/segundos;
+	gflops = gflops/(1000000000);
+	float opeationalIntensity = (float) flops/(64*values[2]);
+	float ramAccesses = (float) values[2]/values[3];
+
+	printf("%lld;%lld;%lld;%lld;%lld;%f;%f;%lld;%f;%f\n",
+	bytes,					//bytes
+	values[0],			//L1 Misses
+	values[1],			//L2 Misses
+	values[2],			//L3 Misses
+	values[3],			//Total de Instruções
+	ramAccesses,		//acessos à RAM por instrução
+	segundos,				//Tempo em segundos
+	flops,					// floating point operations
+	gflops,					//giga flop per second
+	opeationalIntensity
+	);
+
+
+}
+
+//*************************************************************
+//
+//                        MAIN FUNCTION
+//
+//*************************************************************
+ int main() {
+	 int i;
+
+	srand(0);
+
+
+	for (i=0; i<8; i++){
+		createAndMult();
+		srand(i);
+	}
+	printf("\n");
+
+ 	return 1;
+ }
